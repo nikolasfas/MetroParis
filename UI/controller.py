@@ -7,16 +7,40 @@ class Controller:
         self._view = view
         # the model, which implements the logic of the program and holds the data
         self._model = model
+        self._fermataPartenza = None
 
     def handleCreaGrafo(self,e):
-        pass
+        self._model.buildGraph()
+        self._view.lst_result.controls.clear()
+        self._view.lst_result.controls.append(ft.Text("Grafo correttamente creato."))
+        self._view.lst_result.controls.append(ft.Text(f"Il grafo è costituito da {self._model.get_numNodi()} nodi"))
+        self._view.lst_result.controls.append(ft.Text(f"Il grafo è costituito da {self._model.get_numArchi()} archi"))
+        self._view.update_page()
+
+
 
     def handleCercaRaggiungibili(self,e):
-        pass
+        if self._fermataPartenza is None:
+            self._view.lst_result.controls.clear()
+            self._view.lst_result.controls.append(
+                ft.Text("Attenzione, non è stata fatta una scelta di stazione di partenza.", color = "red"))
+            self._view.update_page()
+            return
+
+        nodes = self._model.getBFSNodesFromEdges(self._fermataPartenza)
+        self._view.lst_result.controls.clear()
+        self._view.lst_result.controls.append(
+            ft.Text(f"Di seguito i nodi raggiungibili da {self._fermataPartenza}")
+        )
+        for n in nodes:
+            self._view.lst_result.controls.append(ft.Text(n))
+        self._view.update_page()
 
     def loadFermate(self, dd: ft.Dropdown()):
         fermate = self._model.fermate
 
+# SPECIFICARE OGGETTO STESSO NEL CAMPO data, text E' UNA STRINGA DI QUELL'OGGETTO LI'
+# E POI ASSOCIAMO METODO AL PARAMETRO on_click
         if dd.label == "Stazione di Partenza":
             for f in fermate:
                 dd.options.append(ft.dropdown.Option(text=f.nome,

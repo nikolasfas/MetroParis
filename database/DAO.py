@@ -45,7 +45,7 @@ class DAO():
         result = []
 
         cursor = conn.cursor(dictionary=True)
-        query = "select * from connessione c where c.id_stazP = 8"
+        query = "select * from connessione c where c.id_stazP = %s"
         cursor.execute(query, (u.id_fermata,))
 
 
@@ -62,7 +62,7 @@ class DAO():
         result = []
 
         cursor = conn.cursor(dictionary=True)
-        query = "SELECT * FROM fermata"
+        query = "SELECT * FROM connessione c"
         cursor.execute(query)
 
         for row in cursor:
